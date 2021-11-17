@@ -134,7 +134,7 @@
    <sender>comboBoxStart</sender>
    <signal>currentIndexChanged(QString)</signal>
    <receiver>QtWidgetsLS</receiver>
-   <slot>startsearch()</slot>
+   <slot>startsearch(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>305</x>
@@ -150,7 +150,7 @@
    <sender>comboBoxEnd</sender>
    <signal>currentIndexChanged(QString)</signal>
    <receiver>QtWidgetsLS</receiver>
-   <slot>endsearch()</slot>
+   <slot>endsearch(QString)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>305</x>
@@ -181,7 +181,7 @@
  </connections>
  <slots>
   <slot>inputloc()</slot>
-  <slot>startsearch()</slot>
-  <slot>endsearch()</slot>
+  <slot>startsearch(QString)</slot>
+  <slot>endsearch(QString)</slot>
  </slots>
 </ui>

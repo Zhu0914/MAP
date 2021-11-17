@@ -5,7 +5,7 @@
 #include "ui_MAP.h"
 class QtWidgetsFL;
 class QtWidgetsLS;
-class MAP : public QMainWindow
+ class MAP : public QMainWindow
 {
     Q_OBJECT
 
@@ -27,6 +27,7 @@ private  slots:
     void zszc();
     void zdjl();
     void zdcx();
+    //void clickmouse(int, int,bool);
 };
 /////////////////////////////////////////////////////////////
 class MyScene : public QGraphicsScene
@@ -35,10 +36,12 @@ class MyScene : public QGraphicsScene
 public:
     explicit MyScene(QObject* parent = 0);
     void stopLines(QGraphicsView*);
+    void clickmouse(int, int, int);
 protected:
     QGraphicsView* qgv;
     void mouseMoveEvent(QGraphicsSceneMouseEvent* event);//覆盖mousePressEvent以捕获鼠标事件
     void mousePressEvent(QGraphicsSceneMouseEvent* event);//覆盖mousePressEvent以捕获鼠标事件
+
 signals:
 public slots:
 };

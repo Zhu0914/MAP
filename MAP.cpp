@@ -110,8 +110,22 @@ void MyScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     addItem(new MyItem(qpointf.x(), qpointf.y(), lb));
     QGraphicsScene::mousePressEvent(event);		    //回调基类鼠标事件
 }
+void MyScene::clickmouse(int x, int y, int lb) {
+    if (lb == 1)depart = true;
+    else arrive = true;
+    QList<QGraphicsItem*> listItem = items();
+    for (int i = listItem.length() - 1; i >= 0; i--) {
+        MyItem* item = (MyItem*)listItem[i];
+        if (item->f() == lb) {
+            listItem.removeAt(i);
+            delete item;
+            break;
+        }
+    }
+    QGraphicsScene::addItem(new MyItem(x, y, lb));
+}
 void MyScene::stopLines(QGraphicsView* parnt) {     //加载地图站点和线路
-        //按视图graphicsview大小设置scene显示区域大大小
+        //按视图graphicsview大小设置scene显示区域大小
     QSize viewsize = parnt->size();	            //取得graphicsview视图区域大小
     MyScene* scene;
     if (parnt->scene() != Q_NULLPTR)   delete parnt->scene();
@@ -145,6 +159,7 @@ MAP::MAP(QWidget* parent)
 {
     ui.setupUi(this);
     fl = Q_NULLPTR;
+    ls = Q_NULLPTR; 
     gItem = Q_NULLPTR;
     m_Timer = new QTimer(this);
     m_Timer->setSingleShot(true);	                //定时器只执行一次
@@ -153,6 +168,8 @@ MAP::MAP(QWidget* parent)
     connect(ui.action_zszc, SIGNAL(triggered(bool)), this, SLOT(zszc()));
     connect(ui.action_zdjl, SIGNAL(triggered(bool)), this, SLOT(zdjl()));
     connect(ui.action_zdcx, SIGNAL(triggered(bool)), this, SLOT(zdcx()));
+    //ls = new QtWidgetsLS(this); //
+    //connect(ls, SIGNAL(sendloc(int, int, bool)), this, SLOT(clickmouse(int, int, bool)));
     //以下Lambda表达式可以用自动类型推导代替,或用非成员函数的地址代替
     connect(m_Timer, &QTimer::timeout, this, [=]() {
         QList<QGraphicsItem*> listItem = ui.graphicsView->scene()->items();
@@ -188,6 +205,9 @@ void MAP::closeEvent(QCloseEvent* event)
         fl = Q_NULLPTR;
     }
 }
+//void MAP::clickmouse(int, int, bool) {
+//    ((MyScene*)(parnt->scene()))
+//}
 void MAP::zdcx() {
     if (ui.action_zdcx->isChecked() == false) return; //鼠标点击触发两次，第二次触发直接返回
     ui.action_zdcx->setChecked(false);  //鼠标第一次触发设置状态为false,防止第2次触发进入
@@ -196,7 +216,8 @@ void MAP::zdcx() {
         return;
     }
     arrive = depart = false;  //此时未选取步行起点或终点
-    ls = new QtWidgetsLS(); //如果以前没有打开过站点及线路输入窗口
+    ls = new QtWidgetsLS(this);
+    ls->readloc();
     ls->setWindowFlags(Qt::WindowStaysOnTopHint); //设置最外层显示
     ls->myShow(ui.graphicsView);
 }
@@ -208,7 +229,7 @@ void MAP::loadmap() {
         return;
     }
     arrive = depart = false;  //此时未选取步行起点或终点
-    fl = new QtWidgetsFL(); //如果以前没有打开过站点及线路输入窗口
+    fl = new QtWidgetsFL(this); //如果以前没有打开过站点及线路输入窗口
     fl->setWindowFlags(Qt::WindowStaysOnTopHint); //设置最外层显示
     fl->myShow(ui.graphicsView);
 }
