@@ -5,7 +5,7 @@
 #include "ui_MAP.h"
 class QtWidgetsFL;
 class QtWidgetsLS;
- class MAP : public QMainWindow
+class MAP : public QMainWindow
 {
     Q_OBJECT
 
